@@ -159,7 +159,7 @@ echo -e "\n"
 ## Security Measures in Place
 
 1. **System prompt guardrails** - Instructions to stay on topic and refuse off-topic requests
-2. **Rate limiting** - 20 requests/minute per IP via Vercel KV
+2. **Rate limiting** - 20 requests/minute per IP via Upstash Redis
 3. **Stateless design** - No conversation history stored
 4. **Server-side API key** - Never exposed to client
 5. **GPT-4o safety** - Built-in content filtering

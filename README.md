@@ -9,7 +9,7 @@ A personal AI assistant that answers questions about Estifanos Kidane's professi
 - **Framework:** Next.js 14 (App Router)
 - **Styling:** Tailwind CSS
 - **LLM:** OpenAI GPT-4o
-- **Rate Limiting:** Vercel KV (Redis)
+- **Rate Limiting:** Upstash Redis
 - **Hosting:** Vercel
 
 ## Getting Started
@@ -54,7 +54,7 @@ estifanos-agent/
 │   └── projects.md
 ├── lib/
 │   ├── resume.ts            # Loads content → system prompt
-│   └── rate-limit.ts        # Vercel KV rate limiting
+│   └── rate-limit.ts        # Upstash Redis rate limiting
 └── DESIGN.md                # Design specification
 ```
 
@@ -84,7 +84,7 @@ The agent has been tested against common prompt injection attacks. See [TESTING.
 2. Connect repo to Vercel
 3. Add environment variables:
    - `OPENAI_API_KEY`
-4. Add Vercel KV integration for rate limiting
+4. Add Upstash Redis integration for rate limiting
 5. Configure domain (estifanos.dev)
 
 ## Cost Estimate
@@ -92,7 +92,7 @@ The agent has been tested against common prompt injection attacks. See [TESTING.
 | Service | Monthly Cost |
 |---------|--------------|
 | Vercel Hosting | $0 (Hobby) |
-| Vercel KV | $0 (Free tier) |
+| Upstash Redis | $0 (Free tier) |
 | OpenAI API | ~$3-5 |
 | **Total** | **~$3-5/month** |
 
