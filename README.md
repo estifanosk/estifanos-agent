@@ -100,4 +100,4 @@ Based on ~5 employers/day, ~10 messages each.
 
 ## License
 
-Private - All rights reserved.
+MIT
