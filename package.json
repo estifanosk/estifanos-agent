@@ -6,11 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "upload:content": "node --env-file=.env.local scripts/upload-content-to-blob.mjs"
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.5.19",
     "@upstash/redis": "^1.36.3",
+    "@vercel/blob": "^2.3.1",
     "next": "16.1.6",
     "openai": "^6.27.0",
     "react": "19.2.3",

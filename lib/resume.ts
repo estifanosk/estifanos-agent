@@ -1,38 +1,59 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs/promises";
+import path from "node:path";
+import { get } from "@vercel/blob";
 
 const contentDir = path.join(process.cwd(), "content");
+const resumeFiles = [
+  "summary.md",
+  "experience.md",
+  "skills.md",
+  "education.md",
+  "projects.md",
+];
 
-function readMarkdownFile(filename: string): string {
+async function readLocalMarkdownFile(filename: string): Promise<string> {
   const filePath = path.join(contentDir, filename);
   try {
-    return fs.readFileSync(filePath, "utf-8");
+    return await fs.readFile(filePath, "utf-8");
   } catch {
     return "";
   }
 }
 
-export function getResumeContext(): string {
-  const summary = readMarkdownFile("summary.md");
-  const experience = readMarkdownFile("experience.md");
-  const skills = readMarkdownFile("skills.md");
-  const education = readMarkdownFile("education.md");
-  const projects = readMarkdownFile("projects.md");
+async function readBlobMarkdownFile(filename: string): Promise<string> {
+  try {
+    const result = await get(`content/${filename}`, {
+      access: "private",
+      useCache: false,
+    });
 
-  return `
-${summary}
+    if (!result || result.statusCode !== 200 || !result.stream) {
+      return "";
+    }
 
-${experience}
-
-${skills}
-
-${education}
-
-${projects}
-`.trim();
+    return await new Response(result.stream).text();
+  } catch {
+    return "";
+  }
 }
 
-export function getSystemPrompt(): string {
+async function readMarkdownFile(filename: string): Promise<string> {
+  const blobContent = await readBlobMarkdownFile(filename);
+  if (blobContent) {
+    return blobContent;
+  }
+
+  return readLocalMarkdownFile(filename);
+}
+
+export async function getResumeContext(): Promise<string> {
+  const sections = await Promise.all(resumeFiles.map((filename) => readMarkdownFile(filename)));
+  return sections.join("\n\n").trim();
+}
+
+export async function getSystemPrompt(): Promise<string> {
+  const resumeContext = await getResumeContext();
+
   return `You are an AI assistant representing Estifanos Kidane. Answer questions about his professional background, skills, and experience based on the resume data below.
 
 Guidelines:
@@ -45,6 +66,6 @@ Guidelines:
 
 ---
 RESUME DATA:
-${getResumeContext()}
+${resumeContext}
 ---`;
 }

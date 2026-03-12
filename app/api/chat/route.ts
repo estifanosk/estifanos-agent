@@ -27,10 +27,11 @@ export async function POST(request: Request) {
 
   try {
     const { messages } = await request.json();
+    const systemPrompt = await getSystemPrompt();
 
     // Build messages array with system prompt
     const chatMessages = [
-      { role: "system" as const, content: getSystemPrompt() },
+      { role: "system" as const, content: systemPrompt },
       ...messages
         .filter((m: { role: string }) => m.role === "user" || m.role === "assistant")
         .map((m: { role: string; content: string }) => ({
