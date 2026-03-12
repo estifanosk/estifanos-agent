@@ -6,17 +6,18 @@ A personal AI assistant that answers questions about Estifanos Kidane's professi
 
 ## Tech Stack
 
-- **Framework:** Next.js 14 (App Router)
+- **Framework:** Next.js 16 (App Router)
 - **Styling:** Tailwind CSS
 - **LLM:** OpenAI GPT-4o
 - **Rate Limiting:** Upstash Redis
 - **Hosting:** Vercel
+- **Resume Content Storage:** Vercel Blob (private)
 
 ## Getting Started
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/estifanos/estifanos-agent.git
+git clone https://github.com/estifanosk/estifanos-agent.git
 cd estifanos-agent
 ```
 
@@ -25,9 +26,10 @@ cd estifanos-agent
 npm install
 ```
 
-3. Create `.env.local` with your API key:
+3. Create `.env.local` with required environment variables:
 ```bash
 OPENAI_API_KEY=sk-...
+BLOB_READ_WRITE_TOKEN=...
 ```
 
 4. Run the development server:
@@ -46,29 +48,30 @@ estifanos-agent/
 │   ├── page.tsx             # Chat UI
 │   ├── layout.tsx           # Root layout
 │   └── globals.css          # Styles
-├── content/                 # Resume data (markdown)
+├── content/                 # Local resume markdown (fallback for local dev, ignored by git)
 │   ├── summary.md
 │   ├── experience.md
 │   ├── skills.md
 │   ├── education.md
 │   └── projects.md
 ├── lib/
-│   ├── resume.ts            # Loads content → system prompt
+│   ├── resume.ts            # Loads context from private Blob first, local markdown fallback second
 │   └── rate-limit.ts        # Upstash Redis rate limiting
+├── scripts/
+│   └── upload-content-to-blob.mjs  # Uploads local markdown files to private Blob
+├── LICENSE                  # MIT license
 └── DESIGN.md                # Design specification
 ```
 
 ## Updating Resume Content
 
-Edit the markdown files in `/content/` and push to redeploy:
+Edit local files in `/content/`, then upload to private Blob:
 
 ```bash
-git add content/
-git commit -m "Update resume content"
-git push
+npm run upload:content
 ```
 
-Vercel will automatically rebuild and deploy.
+The app retrieves context from private Blob at runtime, so no Git commit is required for content updates.
 
 ## Security
 
