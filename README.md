@@ -2,7 +2,7 @@
 
 A personal AI assistant that answers questions about Estifanos Kidane's professional experience, skills, and background.
 
-**Live:** [estifanos.dev](https://estifanos.dev)
+**Live:** [estifanosk.dev](https://estifanosk.dev)
 
 ## Tech Stack
 
@@ -85,7 +85,7 @@ The agent has been tested against common prompt injection attacks. See [TESTING.
 3. Add environment variables:
    - `OPENAI_API_KEY`
 4. Add Upstash Redis integration for rate limiting
-5. Configure domain (estifanos.dev)
+5. Configure domain (estifanosk.dev)
 
 ## Cost Estimate
 
