@@ -12,8 +12,17 @@ export default function Home() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content:
-        "Hi! I'm an AI assistant for **Estifanos Kidane**. Ask me about his professional experience, skills, or background.",
+      content: `Highlights:
+
+- Technical Lead / Architect at Capital One (2021-2025); led speech analytics, NLP pipelines, and MLOps for card contact-center operations.
+- Senior Software Engineer at Expedia Group (2019-2020); built conversation routing and enrichment services for Expedia's virtual agent platform.
+- Senior Software Engineer at Microsoft Azure Blockchain (2017-2019); built provisioning and ops automation for enterprise Ethereum consortium networks on [Azure Blockchain Service](https://github.com/Azure-Samples/blockchain/blob/master/abs/migration-guide.md).
+- Senior Software Engineer at SAP Concur (2014-2017); helped drive monolith-to-microservices migration and built Kafka platform capabilities for [SAP Concur](https://www.concur.com/).
+- Software Design Engineer at Microsoft (2009-2013); worked on [Microsoft Advertising Editor](https://about.ads.microsoft.com/en-us/solutions/tools/microsoft-advertising-editor) (formerly Bing Ads Editor), shipping desktop features and sync workflows.
+- Software Engineer / Support Engineer in Addis Ababa, Ethiopia (2002-2007); built government finance and court systems with Java/J2EE, Struts, WebSphere, VB.NET/WinForms, and SQL Server.
+
+
+Ask my personal agent about products I worked on below.`,
     },
   ]);
   const [input, setInput] = useState("");
@@ -131,7 +140,7 @@ export default function Home() {
       </header>
 
       {/* Messages */}
-      <main className="flex-1 overflow-y-auto px-4 py-8">
+      <main className="px-4 py-8">
         <div className="mx-auto max-w-2xl space-y-6">
           {messages.map((message, index) => (
             <div
@@ -146,7 +155,7 @@ export default function Home() {
                 }`}
               >
                 {message.role === "assistant" ? (
-                  <div className="prose prose-sm prose-slate max-w-none dark:prose-invert prose-p:leading-relaxed prose-p:my-2 prose-ul:my-2 prose-li:my-0 prose-headings:my-2 prose-strong:text-slate-900 dark:prose-strong:text-white">
+                  <div className="prose prose-sm prose-slate max-w-none dark:prose-invert prose-p:leading-relaxed prose-p:my-2 prose-ul:my-2 prose-li:my-0 prose-headings:my-2 prose-strong:text-slate-900 dark:prose-strong:text-white [&_li+li]:mt-3 [&_li+li]:border-t [&_li+li]:border-slate-200 [&_li+li]:pt-3 dark:[&_li+li]:border-slate-700">
                     <ReactMarkdown>{message.content}</ReactMarkdown>
                   </div>
                 ) : (
@@ -171,14 +180,14 @@ export default function Home() {
       </main>
 
       {/* Input */}
-      <footer className="sticky bottom-0 border-t border-slate-200 bg-white/80 px-4 py-4 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-950/80">
+      <footer className="border-t border-slate-200 bg-white/80 px-4 py-4 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-950/80">
         <form onSubmit={handleSubmit} className="mx-auto max-w-2xl">
           <div className="flex gap-3">
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about experience, skills, projects..."
+              placeholder="Ask about my experience or products I worked on..."
               className="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 placeholder-slate-400 shadow-sm transition-shadow focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder-slate-500 dark:focus:ring-blue-900"
               disabled={isLoading}
             />
