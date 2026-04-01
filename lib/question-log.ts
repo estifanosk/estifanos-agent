@@ -6,6 +6,7 @@ interface QuestionLogEntry {
   question: string;
   askedAt: string;
   ip: string;
+  sessionId: string;
 }
 
 interface DateBucket {
@@ -34,7 +35,7 @@ function csvUnescape(value: string): string {
 
 function toCsvRow(entry: QuestionLogEntry): string {
   const sanitizedQuestion = entry.question.replace(/\r?\n/g, " ").trim();
-  return `${csvEscape(entry.askedAt)},${csvEscape(entry.ip)},${csvEscape(sanitizedQuestion)}\n`;
+  return `${csvEscape(entry.askedAt)},${csvEscape(entry.ip)},${csvEscape(entry.sessionId)},${csvEscape(sanitizedQuestion)}\n`;
 }
 
 function parseCsvLine(line: string): QuestionLogEntry | null {
@@ -72,13 +73,15 @@ function parseCsvLine(line: string): QuestionLogEntry | null {
 
   const askedAt = csvUnescape(columns[0]);
   const ip = csvUnescape(columns[1]);
-  const question = csvUnescape(columns.slice(2).join(","));
+  const hasSessionIdColumn = columns.length >= 4;
+  const sessionId = hasSessionIdColumn ? csvUnescape(columns[2]) : "unknown";
+  const question = csvUnescape(columns.slice(hasSessionIdColumn ? 3 : 2).join(","));
 
   if (!askedAt || !question) {
     return null;
   }
 
-  return { askedAt, ip, question };
+  return { askedAt, ip, sessionId: sessionId || "unknown", question };
 }
 
 function parseCsvFile(contents: string): QuestionLogEntry[] {
@@ -134,7 +137,7 @@ async function appendQuestionToLocalFile(entry: QuestionLogEntry): Promise<void>
   await fs.appendFile(filePath, toCsvRow(entry), "utf8");
 }
 
-export async function logUserQuestion(question: string, ip: string): Promise<void> {
+export async function logUserQuestion(question: string, ip: string, sessionId = "unknown"): Promise<void> {
   const trimmed = question.trim();
 
   if (!trimmed) {
@@ -145,6 +148,7 @@ export async function logUserQuestion(question: string, ip: string): Promise<voi
     question: trimmed,
     askedAt: new Date().toISOString(),
     ip,
+    sessionId,
   };
 
   try {

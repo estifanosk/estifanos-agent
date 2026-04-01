@@ -27,13 +27,15 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { messages } = await request.json();
+    const { messages, sessionId } = await request.json();
     const latestUserMessage = [...messages]
       .reverse()
       .find((m: { role: string; content?: string }) => m.role === "user" && typeof m.content === "string");
 
     if (latestUserMessage?.content) {
-      await logUserQuestion(latestUserMessage.content, ip);
+      const normalizedSessionId =
+        typeof sessionId === "string" && sessionId.trim().length > 0 ? sessionId.trim() : "unknown";
+      await logUserQuestion(latestUserMessage.content, ip, normalizedSessionId);
     }
 
     const systemPrompt = await getSystemPrompt();
