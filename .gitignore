@@ -24,6 +24,7 @@
 .DS_Store
 *.pem
 content/
+data/question-logs/
 
 # debug
 npm-debug.log*
