@@ -29,14 +29,31 @@ export function getSessionTtlSeconds(): number {
 }
 
 export function isAdminCredentialsValid(username: string, password: string): boolean {
-  const expectedUser = process.env.ADMIN_USERNAME;
-  const expectedPassword = process.env.ADMIN_PASSWORD;
+  const expectedUser = normalizeCredential(process.env.ADMIN_USERNAME);
+  const expectedPassword = normalizeCredential(process.env.ADMIN_PASSWORD);
+  const providedUser = normalizeCredential(username);
+  const providedPassword = normalizeCredential(password);
 
   if (!expectedUser || !expectedPassword) {
     return false;
   }
 
-  return username === expectedUser && password === expectedPassword;
+  return providedUser === expectedUser && providedPassword === expectedPassword;
+}
+
+function normalizeCredential(value: string | undefined): string {
+  if (!value) {
+    return "";
+  }
+
+  const trimmed = value.trim();
+  if (
+    (trimmed.startsWith("\"") && trimmed.endsWith("\"")) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+  ) {
+    return trimmed.slice(1, -1).trim();
+  }
+  return trimmed;
 }
 
 export function createAdminSessionToken(username: string): string | null {
@@ -95,4 +112,3 @@ export function verifyAdminSessionToken(token: string | undefined): boolean {
     return false;
   }
 }
-
