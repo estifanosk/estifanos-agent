@@ -91,7 +91,9 @@ The agent has been tested against common prompt injection attacks. See [TESTING.
 - URL: `/admin`
 - Access: login form at `/admin/login` using `ADMIN_USERNAME` and `ADMIN_PASSWORD`
 - Data: user questions are logged from chat requests and grouped by UTC date
-- Storage: Upstash Redis (same Redis integration used for rate limiting)
+- Storage:
+  - Local development: CSV files in `data/question-logs/YYYY-MM-DD.csv`
+  - Vercel deployment: private Blob files in `question-logs/YYYY-MM-DD.csv`
 
 ## Deployment
 
