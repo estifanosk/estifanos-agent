@@ -3,12 +3,23 @@ import {
   createAdminSessionToken,
   getSessionCookieName,
   getSessionTtlSeconds,
+  isAdminAuthConfigured,
   isAdminCredentialsValid,
 } from "@/lib/admin-auth";
 
 export async function POST(request: Request) {
   try {
     const { username, password } = await request.json();
+
+    if (!isAdminAuthConfigured()) {
+      return NextResponse.json(
+        {
+          error:
+            "Admin auth is not configured. Set ADMIN_USERNAME/ADMIN_PASSWORD (or ADMIN_USER/ADMIN_PASS).",
+        },
+        { status: 500 },
+      );
+    }
 
     if (
       typeof username !== "string" ||
@@ -39,4 +50,3 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
 }
-

@@ -29,8 +29,8 @@ export function getSessionTtlSeconds(): number {
 }
 
 export function isAdminCredentialsValid(username: string, password: string): boolean {
-  const expectedUser = normalizeCredential(process.env.ADMIN_USERNAME);
-  const expectedPassword = normalizeCredential(process.env.ADMIN_PASSWORD);
+  const expectedUser = normalizeCredential(process.env.ADMIN_USERNAME ?? process.env.ADMIN_USER);
+  const expectedPassword = normalizeCredential(process.env.ADMIN_PASSWORD ?? process.env.ADMIN_PASS);
   const providedUser = normalizeCredential(username);
   const providedPassword = normalizeCredential(password);
 
@@ -39,6 +39,12 @@ export function isAdminCredentialsValid(username: string, password: string): boo
   }
 
   return providedUser === expectedUser && providedPassword === expectedPassword;
+}
+
+export function isAdminAuthConfigured(): boolean {
+  const expectedUser = normalizeCredential(process.env.ADMIN_USERNAME ?? process.env.ADMIN_USER);
+  const expectedPassword = normalizeCredential(process.env.ADMIN_PASSWORD ?? process.env.ADMIN_PASS);
+  return Boolean(expectedUser && expectedPassword);
 }
 
 function normalizeCredential(value: string | undefined): string {
