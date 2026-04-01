@@ -29,6 +29,20 @@ Ask my personal agent about products I worked on below.`,
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const sessionIdRef = useRef<string>("");
+
+  useEffect(() => {
+    const key = "chat_session_id";
+    const existing = window.localStorage.getItem(key);
+    if (existing) {
+      sessionIdRef.current = existing;
+      return;
+    }
+
+    const created = `s_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
+    window.localStorage.setItem(key, created);
+    sessionIdRef.current = created;
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -56,7 +70,10 @@ Ask my personal agent about products I worked on below.`,
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newMessages }),
+        body: JSON.stringify({
+          messages: newMessages,
+          sessionId: sessionIdRef.current || undefined,
+        }),
         signal: abortControllerRef.current.signal,
       });
 
