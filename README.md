@@ -30,6 +30,9 @@ npm install
 ```bash
 OPENAI_API_KEY=sk-...
 BLOB_READ_WRITE_TOKEN=...
+ADMIN_USERNAME=...
+ADMIN_PASSWORD=...
+ADMIN_SESSION_SECRET=...
 ```
 
 4. Run the development server:
@@ -43,8 +46,11 @@ npm run dev
 
 ```
 estifanos-agent/
+├── .env.example             # Example environment variable template
+├── README.md                # Setup and deployment documentation
+├── LICENSE                  # MIT license
 ├── app/
-│   ├── api/chat/route.ts    # Chat API endpoint
+│   ├── api/chat/route.ts    # Chat API route (OpenAI + rate limiting)
 │   ├── page.tsx             # Chat UI
 │   ├── layout.tsx           # Root layout
 │   └── globals.css          # Styles
@@ -59,8 +65,9 @@ estifanos-agent/
 │   └── rate-limit.ts        # Upstash Redis rate limiting
 ├── scripts/
 │   └── upload-content-to-blob.mjs  # Uploads local markdown files to private Blob
-├── LICENSE                  # MIT license
-└── DESIGN.md                # Design specification
+├── DESIGN.md                # Product/design notes
+├── TESTING.md               # Prompt-injection test results
+└── next.config.ts           # Next.js configuration
 ```
 
 ## Updating Resume Content
@@ -78,6 +85,13 @@ The app retrieves context from private Blob at runtime, so no Git commit is requ
 The agent has been tested against common prompt injection attacks. See [TESTING.md](TESTING.md) for details.
 
 **Summary:** All 6 attack types tested (instruction override, system prompt extraction, DAN jailbreak, persona manipulation, personal info extraction, context extraction) were successfully blocked.
+
+### Admin Questions Page
+
+- URL: `/admin`
+- Access: login form at `/admin/login` using `ADMIN_USERNAME` and `ADMIN_PASSWORD`
+- Data: user questions are logged from chat requests and grouped by UTC date
+- Storage: Upstash Redis (same Redis integration used for rate limiting)
 
 ## Deployment
 
