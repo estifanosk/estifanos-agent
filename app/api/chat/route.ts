@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import { getSystemPrompt } from "@/lib/resume";
 import { rateLimit } from "@/lib/rate-limit";
+import { logUserQuestion } from "@/lib/question-log";
 import { headers } from "next/headers";
 
 export async function POST(request: Request) {
@@ -27,6 +28,14 @@ export async function POST(request: Request) {
 
   try {
     const { messages } = await request.json();
+    const latestUserMessage = [...messages]
+      .reverse()
+      .find((m: { role: string; content?: string }) => m.role === "user" && typeof m.content === "string");
+
+    if (latestUserMessage?.content) {
+      await logUserQuestion(latestUserMessage.content, ip);
+    }
+
     const systemPrompt = await getSystemPrompt();
 
     // Build messages array with system prompt
