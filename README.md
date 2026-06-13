@@ -1,6 +1,6 @@
-# Estifanos Agent
+# Interactive Profile
 
-A personal AI assistant that answers questions about Estifanos Kidane's professional experience, skills, and background.
+An interactive AI-backed career profile that answers questions about Estifanos Kidane's professional experience, skills, projects, and background.
 
 **Live:** [estifanosk.dev](https://estifanosk.dev)
 
@@ -17,8 +17,8 @@ A personal AI assistant that answers questions about Estifanos Kidane's professi
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/estifanosk/estifanos-agent.git
-cd estifanos-agent
+git clone https://github.com/estifanosk/interactive-profile.git
+cd interactive-profile
 ```
 
 2. Install dependencies:
@@ -45,7 +45,7 @@ npm run dev
 ## Project Structure
 
 ```
-estifanos-agent/
+interactive-profile/
 ├── .env.example             # Example environment variable template
 ├── README.md                # Setup and deployment documentation
 ├── LICENSE                  # MIT license
@@ -82,7 +82,7 @@ The app retrieves context from private Blob at runtime, so no Git commit is requ
 
 ## Security
 
-The agent has been tested against common prompt injection attacks. See [TESTING.md](TESTING.md) for details.
+The assistant has been tested against common prompt injection attacks. See [TESTING.md](TESTING.md) for details.
 
 **Summary:** All 6 attack types tested (instruction override, system prompt extraction, DAN jailbreak, persona manipulation, personal info extraction, context extraction) were successfully blocked.
 
