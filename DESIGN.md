@@ -2,7 +2,7 @@
 
 ## Overview
 
-A minimal chat interface that allows visitors to ask questions about Estifanos Kidane's professional experience. The agent responds using an LLM with resume context injected via system prompt.
+A minimal chat interface that allows visitors to ask questions about Estifanos Kidane's professional experience. The assistant responds using an LLM with resume context injected via system prompt.
 
 **Live URL:** estifanos.dev
 
@@ -192,7 +192,7 @@ data: [DONE]
 ## File Structure
 
 ```
-estif-agent/
+interactive-profile/
 ├── app/
 │   ├── page.tsx           # Chat UI
 │   ├── layout.tsx         # Root layout
