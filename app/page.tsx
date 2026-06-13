@@ -8,11 +8,20 @@ interface Message {
   content: string;
 }
 
+const suggestedQuestions = [
+  "What kind of backend work has Estifanos done?",
+  "Which projects show his data engineering experience?",
+  "Where would he be strongest on a team?",
+  "What is he currently learning or building?",
+];
+
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: `Highlights:
+      content: `This is an experimental portfolio assistant built by **Estifanos Kidane**. Ask about his work, projects, skills, or engineering background.
+
+Highlights:
 
 - Technical Lead / Architect at Capital One (2021-2025); led speech analytics, NLP pipelines, and MLOps for card contact-center operations.
 - Senior Software Engineer at Expedia Group (2019-2020); built conversation routing and enrichment services for Expedia's virtual agent platform.
@@ -21,8 +30,7 @@ export default function Home() {
 - Software Design Engineer at Microsoft (2009-2013); worked on [Microsoft Advertising Editor](https://about.ads.microsoft.com/en-us/solutions/tools/microsoft-advertising-editor) (formerly Bing Ads Editor), shipping desktop features and sync workflows.
 - Software Engineer / Support Engineer in Addis Ababa, Ethiopia (2002-2007); built government finance and court systems with Java/J2EE, Struts, WebSphere, VB.NET/WinForms, and SQL Server.
 
-
-Ask my personal agent about products I worked on below.`,
+Try one of the starter questions below or ask directly.`,
     },
   ]);
   const [input, setInput] = useState("");
@@ -52,11 +60,11 @@ Ask my personal agent about products I worked on below.`,
     scrollToBottom();
   }, [messages]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim() || isLoading) return;
+  const sendMessage = async (content: string) => {
+    const trimmedContent = content.trim();
+    if (!trimmedContent || isLoading) return;
 
-    const userMessage: Message = { role: "user", content: input.trim() };
+    const userMessage: Message = { role: "user", content: trimmedContent };
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
     setInput("");
@@ -135,6 +143,11 @@ Ask my personal agent about products I worked on below.`,
     }
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await sendMessage(input);
+  };
+
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
       {/* Header */}
@@ -149,7 +162,7 @@ Ask my personal agent about products I worked on below.`,
                 Estifanos Kidane
               </h1>
               <p className="text-sm text-slate-500 dark:text-slate-400">
-                Software Engineer
+                Software Engineer / AI Portfolio Experiment
               </p>
             </div>
           </div>
@@ -181,6 +194,21 @@ Ask my personal agent about products I worked on below.`,
               </div>
             </div>
           ))}
+          {messages.length === 1 && (
+            <div className="grid gap-2 sm:grid-cols-2">
+              {suggestedQuestions.map((question) => (
+                <button
+                  key={question}
+                  type="button"
+                  onClick={() => sendMessage(question)}
+                  className="rounded-lg border border-slate-200 bg-white px-4 py-3 text-left text-sm leading-relaxed text-slate-700 shadow-sm transition hover:border-blue-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-blue-700 dark:hover:bg-slate-800 dark:focus:ring-blue-900"
+                  disabled={isLoading}
+                >
+                  {question}
+                </button>
+              ))}
+            </div>
+          )}
           {isLoading && messages[messages.length - 1]?.role === "user" && (
             <div className="flex justify-start">
               <div className="rounded-2xl rounded-bl-md bg-white px-5 py-4 shadow-md ring-1 ring-slate-100 dark:bg-slate-800 dark:ring-slate-700">
@@ -204,7 +232,7 @@ Ask my personal agent about products I worked on below.`,
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about my experience or products I worked on..."
+              placeholder="Ask about experience, skills, projects..."
               className="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 placeholder-slate-400 shadow-sm transition-shadow focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder-slate-500 dark:focus:ring-blue-900"
               disabled={isLoading}
             />
@@ -217,7 +245,7 @@ Ask my personal agent about products I worked on below.`,
             </button>
           </div>
           <p className="mt-2 text-center text-xs text-slate-400">
-            Powered by AI
+            A learning project using curated resume context, OpenAI, Vercel Blob, and rate limiting.
           </p>
         </form>
       </footer>
